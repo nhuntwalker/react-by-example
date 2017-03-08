@@ -1,4 +1,9 @@
 var App = React.createClass({
+  getDefaultProps: function(){
+    return {
+      headings: ['When', 'Who', 'What']    
+    }
+  },
   propTypes: {
     headings: React.PropTypes.array,
     changeSets: React.PropTypes.array,
