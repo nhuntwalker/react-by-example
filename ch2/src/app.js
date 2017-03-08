@@ -12,15 +12,15 @@ var App = React.createClass({
 
 var RecentChangesTable = React.createClass({
   render: function(){
-    return <table className='table'>
+    return <table className='recentChangesTable'>
       {this.props.children}
     </table>;
   }
 });
 RecentChangesTable.Headings = React.createClass({
   render: function(){
-    var headings = this.props.headings.map(function(h){
-      return(<RecentChangesTable.Heading heading={h} />);
+    var headings = this.props.headings.map(function(h, index){
+      return(<RecentChangesTable.Heading key={index} heading={h} />);
     });
     return(<thead>
     <tr>{headings}</tr>
@@ -34,7 +34,10 @@ RecentChangesTable.Heading = React.createClass({
 });
 RecentChangesTable.Row = React.createClass({
   render: function(){
-    return(<tr>
+    var trStyle = {
+      backgroundColor: 'aliceblue'
+    };
+    return(<tr style={trStyle}>
       <td>{this.props.changeSet.when}</td>
       <td>{this.props.changeSet.who}</td>
       <td>{this.props.changeSet.description}</td>
@@ -43,8 +46,8 @@ RecentChangesTable.Row = React.createClass({
 });
 RecentChangesTable.Rows = React.createClass({
   render: function(){
-    var rows = this.props.changeSets.map(function(changeSet){
-      return(<RecentChangesTable.Row changeSet={changeSet}/>);
+    var rows = this.props.changeSets.map(function(changeSet, index){
+      return(<RecentChangesTable.Row key={index} changeSet={changeSet}/>);
     });
     return(<tbody>{rows}</tbody>);
   }
@@ -74,6 +77,5 @@ var props = {
   changeSets: data,
   title: title
 };
-
 
 React.render(<App {...props} />, document.body);
