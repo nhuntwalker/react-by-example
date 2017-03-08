@@ -1,20 +1,42 @@
 var App = React.createClass({
-  getDefaultProps: function(){
+  getInitialState: function(){
     return {
-      headings: ['When', 'Who', 'What']    
+      changeSets: []   
     }
+  },
+  mapOpenLibraryDataToChangeSet: function(data){
+    console.log('mapOpenLibraryDataToChangeSet called');
+    return data.map(function(change, idx){
+      return {
+        "when": convertDate(change.timestamp),
+        "who": change.author.key,
+        "description": change.comment
+      }
+    });
+  },
+  componentDidMount: function(){
+    console.log('Doing Ajax Call');
+    $.ajax({
+      url: 'http://openlibrary.org/recentchanges.json?limit=10',
+      context: this,
+      dataType: 'json',
+      type: 'GET'
+    }).done(function(data){
+      var changeSets = this.mapOpenLibraryDataToChangeSet(data);
+      this.setState({
+        changeSets: changeSets
+      });
+    });
   },
   propTypes: {
     headings: React.PropTypes.array,
-    changeSets: React.PropTypes.array,
-    author: React.PropTypes.string.isRequired
   },
   render: function(){
     return (<div>
       <h1>{this.props.title}</h1>
       <RecentChangesTable>
         <RecentChangesTable.Headings headings={this.props.headings} />
-        <Rows changeSets = {this.props.changeSets} />
+        <Rows changeSets={this.state.changeSets} />
       </RecentChangesTable>
     </div>);
   }
@@ -63,28 +85,28 @@ Rows = React.createClass({
   }
 });
 
-var data = [{ "when": "2 minutes ago",
-            "who": "Jill Dupre",
-            "description": "Created new account"
-          },
-          {
-            "when": "1 hour ago",
-            "who": "Lose White",
-            "description": "Added fist chapter"
-          },
-          {
-            "when": "2 hours ago",
-            "who": "Jordan Whash",
-            "description": "Created new account"
-          }];
-
-var headings = ['Last Change At', 'Author', 'Summary'];
+var headings = ['Updated At', 'Author', 'Change'];
 
 var title = 'Recent Changes';
 
+function convertDate(dateStr){
+  var newDate = new Date(dateStr);
+  var dd = newDate.getDate();
+  var mm = newDate.getMonth()+1;
+
+  var yyyy = newDate.getFullYear();
+  if(dd<10){
+      dd='0'+dd;
+  } 
+  if(mm<10){
+      mm='0'+mm;
+  } 
+  var newDate = dd+'/'+mm+'/'+yyyy;
+  return newDate
+};
+
 var props = {
   headings: headings,
-  changeSets: data,
   title: title
 };
 
