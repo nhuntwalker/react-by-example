@@ -5,7 +5,14 @@ var ModalAlertTimeout = React.createClass({
       setTimeout(() => {
         let timeoutModal = this.refs.timeoutModal.getDOMNode();
         $(timeoutModal).modal('show');
-      });
+      }, 100);
+    },
+    unMountComponent() {
+        React.unmountComponentAtNode(this.getDOMNode().parentNode);
+    },
+    componentWillUnmount() { // This method is complete guesswork.
+      let timeoutModal = this.refs.timeoutModal.getDOMNode();
+      $(timeoutModal).on('hidden.bs.modal', this.unMountComponent);  
     },
     render() {
         return (

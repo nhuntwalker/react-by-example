@@ -5,7 +5,7 @@ import {ModalAlertTimeout} from './modals';
 
 var BookStore = React.createClass({
     getInitialState() {
-        return ({ currentStep: 1, formValues: {}, cartTimeout: 60 * 15 });
+        return ({ currentStep: 1, formValues: {}, cartTimeout: 60 * 0.1 });
     },
     updateFormData(formData) {
         var formValues = Object.assign({}, this.state.formValues, formData);
